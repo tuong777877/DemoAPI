@@ -1,4 +1,4 @@
-﻿using DemoMyWebAPI.Model;
+﻿using DemoMyWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DemoMyWebAPI.Data
@@ -10,6 +10,7 @@ namespace DemoMyWebAPI.Data
 
         }
         public DbSet<Car> Cars { get; set; }
+        public DbSet<CateCar> CateCars { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             
