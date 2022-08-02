@@ -1,4 +1,5 @@
 using DemoMyWebAPI.Data;
+using DemoMyWebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 namespace DemoMyWebAPI
 {
@@ -15,7 +16,7 @@ namespace DemoMyWebAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<CarStoreContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
-
+            builder.Services.AddScoped<ICateCarRepository, CateCarRepository>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

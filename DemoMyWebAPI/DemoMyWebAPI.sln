@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoMyWebAPI", "DemoMyWebAPI\DemoMyWebAPI.csproj", "{75C69A89-01F1-4BBC-A0D7-AE335A49913C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoMyWebAPI", "DemoMyWebAPI\DemoMyWebAPI.csproj", "{75C69A89-01F1-4BBC-A0D7-AE335A49913C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
