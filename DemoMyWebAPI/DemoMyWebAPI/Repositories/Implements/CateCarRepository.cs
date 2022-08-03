@@ -1,7 +1,8 @@
 ﻿using DemoMyWebAPI.Data;
 using DemoMyWebAPI.Models;
+using DemoMyWebAPI.Repository.Constracts;
 
-namespace DemoMyWebAPI.Services
+namespace DemoMyWebAPI.Repository.Implements
 {
     public class CateCarRepository : ICateCarRepository
     {

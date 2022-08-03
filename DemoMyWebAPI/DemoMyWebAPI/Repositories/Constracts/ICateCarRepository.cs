@@ -1,6 +1,6 @@
 ﻿using DemoMyWebAPI.Models;
 
-namespace DemoMyWebAPI.Services
+namespace DemoMyWebAPI.Repository.Constracts
 {
     public interface ICateCarRepository
     {

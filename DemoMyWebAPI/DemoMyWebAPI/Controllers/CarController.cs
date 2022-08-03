@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DemoMyWebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CarController : Controller
     {
         private readonly CarStoreContext _context;
@@ -18,7 +18,8 @@ namespace DemoMyWebAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var ListCateCar = _context.Cars.ToList();
+            var ListCateCar = _context.Cars
+                .ToList();
             return Ok(ListCateCar);
         }
 
@@ -49,13 +50,11 @@ namespace DemoMyWebAPI.Controllers
             {
                 var car = new Car
                 {
-                    Id = model.Id = Guid.NewGuid(),
+                    Id = Guid.NewGuid(),
                     Name = model.Name,
                     Price = model.Price,
                     Descirption=model.Descirption,
-                    Status = model.Status,
-                    IdCate = model.IdCate,
-                    catecar=model.catecar,
+                    IdCate=model.IdCate,
                 };
                 _context.Add(car);
                 _context.SaveChanges();
@@ -67,7 +66,7 @@ namespace DemoMyWebAPI.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut]
+        [HttpPut("{id}")]
         public IActionResult UpdateById(string id, CarModel model)
         {
             var car = _context.Cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
@@ -77,18 +76,15 @@ namespace DemoMyWebAPI.Controllers
             }
             else
             {
-                car.Id = model.Id;
                 car.Name = model.Name;
                 car.Price = model.Price;
                 car.Descirption = model.Descirption;
-                car.Status = model.Status;
                 car.IdCate = model.IdCate;
-                car.catecar = model.catecar;
                 _context.SaveChanges();
                 return NoContent();
             }
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
             var car = _context.Cars.SingleOrDefault(a => a.Id == Guid.Parse(id));

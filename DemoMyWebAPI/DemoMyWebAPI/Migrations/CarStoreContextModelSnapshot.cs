@@ -55,7 +55,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasIndex("IdCate");
 
-                    b.ToTable("Car");
+                    b.ToTable("Car", (string)null);
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.CateCar", b =>
@@ -73,7 +73,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryCar");
+                    b.ToTable("CategoryCar", (string)null);
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.CateCustomer", b =>
@@ -91,7 +91,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryCustomer");
+                    b.ToTable("CategoryCustomer", (string)null);
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.Customer", b =>
@@ -138,7 +138,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasIndex("IdCate");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.Order", b =>
