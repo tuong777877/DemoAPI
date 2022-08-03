@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DemoMyWebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CateCarController : Controller
     {
         private readonly CarStoreContext _context;

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DemoMyWebAPI.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DemoMyWebAPI.Data
@@ -19,13 +20,6 @@ namespace DemoMyWebAPI.Data
         public StatusCar Status { get; set; }
         public string Descirption { get; set; }
         public DateTime? DateRelease { get; set; }
-        public enum StatusCar
-        {
-            New = 0,
-            Payment = 1,
-            Sold = 2,
-            Cancel = 3,
-        }
         public int? IdCate { get; set; }
         [ForeignKey("IdCate")]
         public CateCar catecar { get; set; }

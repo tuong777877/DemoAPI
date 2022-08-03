@@ -1,24 +1,24 @@
-﻿using DemoMyWebAPI.Models;
-using DemoMyWebAPI.Services;
+﻿using DemoMyWebAPI.Model;
+using DemoMyWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoMyWebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class CateCar2Controller : Controller
+    [Route("api/[controller]")]
+    public class CarRepositoryController : Controller
     {
-        private readonly ICateCarRepository _cateCarRepository;
-        public CateCar2Controller(ICateCarRepository cateCarRepository)
+        private readonly ICarRepository _carRepository;
+        public CarRepositoryController(ICarRepository carRepository)
         {
-            _cateCarRepository = cateCarRepository;
+            _carRepository = carRepository;
         }
         [HttpGet]
         public IActionResult GetAll()
         {
             try
             {
-                return Ok(_cateCarRepository.GetAll());
+                return Ok(_carRepository.GetAll());
             }
             catch
             {
@@ -26,16 +26,16 @@ namespace DemoMyWebAPI.Controllers
             }
         }
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(string id)
         {
             try
             {
-                var cateCar = _cateCarRepository.GetById(id);
-                if (cateCar != null)
+                var car = _carRepository.GetById(id);
+                if (car != null)
                 {
-                    return Ok(cateCar);
+                    return Ok(car);
                 }
-                return NotFound();
+                return null;
             }
             catch
             {
@@ -43,11 +43,11 @@ namespace DemoMyWebAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Create(CateCarModel model)
+        public IActionResult Create(CarModel model)
         {
             try
             {
-                return Ok(_cateCarRepository.Add(model));
+                return Ok(_carRepository.Add(model));
             }
             catch
             {
@@ -55,15 +55,15 @@ namespace DemoMyWebAPI.Controllers
             }
         }
         [HttpPut("{id}")]
-        public IActionResult Update(int id, CateCarVM catecarVM)
+        public IActionResult Update(string id, CarVM carVM)
         {
-            if (id != catecarVM.Id)
+            if (Guid.Parse(id) != carVM.Id)
             {
-                return BadRequest();
+                return NotFound();
             }
             try
             {
-                _cateCarRepository.Update(catecarVM);
+                _carRepository.Update(carVM);
                 return NoContent();
             }
             catch
@@ -72,11 +72,11 @@ namespace DemoMyWebAPI.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             try
             {
-                _cateCarRepository.Delete(id);
+                _carRepository.Delete(id);
                 return Ok();
             }
             catch

@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DemoMyWebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class CateCustomerController : Controller
     {
         private readonly CarStoreContext _context;
