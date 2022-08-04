@@ -18,7 +18,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CarStoreContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
 builder.Services.AddScoped<ICateCarRepository, CateCarRepository>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
-var app = builder.Build();
 // SecretKey and JWT Bear
 var secretkey = builder.Configuration["AppSettings:SecretKey"];
 var secretkeyBytes = Encoding.UTF8.GetBytes(secretkey);
@@ -37,6 +36,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ClockSkew = TimeSpan.Zero
     };
 });
+var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
