@@ -9,6 +9,7 @@ namespace DemoMyWebAPI.Data
         {
 
         }
+        public DbSet<RefreshToken> refreshTokens { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<CateCar> CateCars { get; set; }
         public DbSet<Customer> Customers { get; set; }

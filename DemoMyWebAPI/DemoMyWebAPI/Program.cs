@@ -3,6 +3,7 @@ global using DemoMyWebAPI.Repository.Constracts;
 global using DemoMyWebAPI.Repository.Implements;
 //using DemoMyWebAPI.Services;
 global using Microsoft.EntityFrameworkCore;
+using DemoMyWebAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<CarStoreContext>(o => o.UseSqlServer(builder.Confi
 builder.Services.AddScoped<ICateCarRepository, CateCarRepository>();
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 // SecretKey and JWT Bear
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 var secretkey = builder.Configuration["AppSettings:SecretKey"];
 var secretkeyBytes = Encoding.UTF8.GetBytes(secretkey);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
