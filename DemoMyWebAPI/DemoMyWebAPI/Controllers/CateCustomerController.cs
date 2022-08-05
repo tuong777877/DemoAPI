@@ -1,78 +1,79 @@
 ﻿using DemoMyWebAPI.Data;
 using DemoMyWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DemoMyWebAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CateCarController : Controller
+    public class CateCustomerController : Controller
     {
         private readonly CarStoreContext _context;
-        public CateCarController(CarStoreContext context)
+        public CateCustomerController(CarStoreContext context)
         {
             _context = context;
         }
         [HttpGet]
         public IActionResult GetAll()
         {
-            var ListCateCar = _context.CateCars.ToList();
-            return Ok(ListCateCar);
+            var catecus = _context.CateCustomers.ToList();
+            return Ok(catecus);
         }
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
+            var catecus = _context.CateCustomers.SingleOrDefault(s => s.Id == id);
             try
             {
-                var ListCateCar = _context.CateCars.SingleOrDefault(a => a.Id == id);
-                if (ListCateCar == null)
+                if (catecus == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return Ok(ListCateCar);
+                    return Ok(catecus);
                 }
             }
             catch
             {
                 return BadRequest();
-            }       
+            }
         }
         [HttpPost]
-        public IActionResult Create(CateCarModel model)
+        public IActionResult Create(CateCustomerModel model)
         {
             try
             {
-                var catecar = new CateCar
+                var catecus = new CateCustomer
                 {
                     Name = model.Name,
                 };
-                _context.Add(catecar);
+                _context.Add(catecus);
                 _context.SaveChanges();
-                return Ok(catecar);
+                return Ok(catecus);
             }
             catch
             {
-
                 return BadRequest();
             }
-            
         }
         [HttpPut("{id}")]
-        public IActionResult UpdateById(int id, CateCarModel model)
+        public IActionResult Update(int id, CateCustomerModel model)
         {
-            var catecar = _context.CateCars.SingleOrDefault(a => a.Id == id);
-            if(catecar == null)
+            var catecus = _context.CateCustomers.SingleOrDefault(cc => cc.Id == id);
+            try
             {
+                if (catecus != null)
+                {
+                    catecus.Name = model.Name;
+                    _context.SaveChanges();
+                    return NoContent();
+                }
                 return NotFound();
             }
-            else
+            catch
             {
-                catecar.Name = model.Name;
-                _context.SaveChanges();
-                return NoContent();
+                return BadRequest();
             }
         }
         [HttpDelete("{id}")]
@@ -80,17 +81,14 @@ namespace DemoMyWebAPI.Controllers
         {
             try
             {
-                var ListCateCar = _context.CateCars.SingleOrDefault(a => a.Id == id);
-                if (ListCateCar == null)
+                var catecus = _context.CateCars.SingleOrDefault(cc => cc.Id == id);
+                if (catecus != null)
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    _context.Remove(ListCateCar);
+                    _context.Remove(catecus);
                     _context.SaveChanges();
-                    return Ok(ListCateCar);
+                    return Ok(catecus);
                 }
+                return NotFound();
             }
             catch
             {

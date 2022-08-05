@@ -4,6 +4,7 @@ using DemoMyWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoMyWebAPI.Migrations
 {
     [DbContext(typeof(CarStoreContext))]
-    partial class CarStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20220802045211_AddOrderSchema")]
+    partial class AddOrderSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +57,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasIndex("IdCate");
 
-                    b.ToTable("Car", (string)null);
+                    b.ToTable("Car");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.CateCar", b =>
@@ -73,7 +75,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryCar", (string)null);
+                    b.ToTable("CategoryCar");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.CateCustomer", b =>
@@ -91,7 +93,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryCustomer", (string)null);
+                    b.ToTable("CategoryCustomer");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.Customer", b =>
@@ -138,7 +140,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasIndex("IdCate");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.Order", b =>
@@ -183,8 +185,8 @@ namespace DemoMyWebAPI.Migrations
                     b.Property<Guid>("IdOrder")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Discount")
-                        .HasColumnType("int");
+                    b.Property<byte>("Discount")
+                        .HasColumnType("tinyint");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");

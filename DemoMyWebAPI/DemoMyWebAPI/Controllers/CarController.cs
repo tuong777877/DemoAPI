@@ -1,47 +1,41 @@
-﻿using DemoMyWebAPI.Model;
-using Microsoft.AspNetCore.Http;
+﻿using DemoMyWebAPI.Data;
+using DemoMyWebAPI.Model;
+using DemoMyWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoMyWebAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class CarController : ControllerBase
+    [Route("api/[controller]")]
+    public class CarController : Controller
     {
-        public static List<Car> cars = new List<Car>();
+        private readonly CarStoreContext _context;
+        public CarController(CarStoreContext context)
+        {
+            _context = context;
+        }
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(cars);
+            var ListCateCar = _context.Cars
+                .ToList();
+            return Ok(ListCateCar);
         }
-        [HttpPost]
-        public IActionResult Create(Car car)
-        {
-            var Ncar = new Car
-            {
-                Id = Guid.NewGuid(),
-                Name = car.Name,
-                Price = car.Price,
-                Status = car.Status,
-                DateRelease = car.DateRelease,
-                Descirption = car.Descirption,
-            };
-            cars.Add(Ncar);
-            return Ok();
-        }
+
         [HttpGet("{id}")]
         public IActionResult GetById(string id)
         {
             try
             {
-                var Ncar = cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
-                if (Ncar == null)
+                var ListCar = _context.Cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
+                if (ListCar == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return Ok(cars);
+                    return Ok(ListCar);
                 }
             }
             catch
@@ -49,51 +43,60 @@ namespace DemoMyWebAPI.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("{id}")]
-        public IActionResult Edit(string id, Car car)
+        [HttpPost]
+        public IActionResult Create(CarModel model)
         {
-            var Ncar = cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
             try
             {
-                if (Ncar == null)
+                var car = new Car
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    if (id != Ncar.Id.ToString())
-                    {
-                        return BadRequest();
-                    }
-                    else
-                    {
-                        Ncar.Name = car.Name;
-                        Ncar.Price = car.Price;
-                        Ncar.Status = car.Status;
-                        Ncar.Descirption = car.Descirption;
-                        Ncar.DateRelease = car.DateRelease;
-                        return Ok();
-                    }
-                }
+                    Id = Guid.NewGuid(),
+                    Name = model.Name,
+                    Price = model.Price,
+                    Descirption=model.Descirption,
+                    IdCate=model.IdCate,
+                };
+                _context.Add(car);
+                _context.SaveChanges();
+                return Ok(car);
             }
             catch
             {
+
                 return BadRequest();
+            }
+        }
+        [HttpPut("{id}")]
+        public IActionResult UpdateById(string id, CarModel model)
+        {
+            var car = _context.Cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
+            if (car == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                car.Name = model.Name;
+                car.Price = model.Price;
+                car.Descirption = model.Descirption;
+                car.IdCate = model.IdCate;
+                _context.SaveChanges();
+                return NoContent();
             }
         }
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            var Ncar = cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
+            var car = _context.Cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
             try
             {
-                if (Ncar == null)
+                if (car == null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    cars.Remove(Ncar);
+                    _context.Remove(car);
                     return Ok();
                 }
             }
@@ -101,7 +104,7 @@ namespace DemoMyWebAPI.Controllers
             {
                 return BadRequest();
             }
-            
+
         }
     }
 }

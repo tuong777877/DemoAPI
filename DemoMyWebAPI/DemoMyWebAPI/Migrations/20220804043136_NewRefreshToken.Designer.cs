@@ -4,6 +4,7 @@ using DemoMyWebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoMyWebAPI.Migrations
 {
     [DbContext(typeof(CarStoreContext))]
-    partial class CarStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20220804043136_NewRefreshToken")]
+    partial class NewRefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +57,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasIndex("IdCate");
 
-                    b.ToTable("Car", (string)null);
+                    b.ToTable("Car");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.CateCar", b =>
@@ -73,7 +75,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryCar", (string)null);
+                    b.ToTable("CategoryCar");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.CateCustomer", b =>
@@ -91,7 +93,7 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CategoryCustomer", (string)null);
+                    b.ToTable("CategoryCustomer");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.Customer", b =>
@@ -109,16 +111,16 @@ namespace DemoMyWebAPI.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<int?>("IdCate")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -138,7 +140,10 @@ namespace DemoMyWebAPI.Migrations
 
                     b.HasIndex("IdCate");
 
-                    b.ToTable("Customer", (string)null);
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.Order", b =>
@@ -199,6 +204,30 @@ namespace DemoMyWebAPI.Migrations
                     b.ToTable("OrderDetail", (string)null);
                 });
 
+            modelBuilder.Entity("DemoMyWebAPI.Data.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CusId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("JwtId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CusId");
+
+                    b.ToTable("RefreshToken");
+                });
+
             modelBuilder.Entity("DemoMyWebAPI.Data.Car", b =>
                 {
                     b.HasOne("DemoMyWebAPI.Data.CateCar", "catecar")
@@ -243,6 +272,17 @@ namespace DemoMyWebAPI.Migrations
                     b.Navigation("Car");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("DemoMyWebAPI.Data.RefreshToken", b =>
+                {
+                    b.HasOne("DemoMyWebAPI.Data.Customer", "customer")
+                        .WithMany()
+                        .HasForeignKey("CusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("customer");
                 });
 
             modelBuilder.Entity("DemoMyWebAPI.Data.Car", b =>
