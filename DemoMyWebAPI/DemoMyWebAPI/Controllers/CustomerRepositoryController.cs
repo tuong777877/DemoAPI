@@ -1,24 +1,26 @@
-﻿using DemoMyWebAPI.Model;
-using DemoMyWebAPI.Models;
+﻿using DemoMyWebAPI.Models;
+using DemoMyWebAPI.Repositories.Constracts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoMyWebAPI.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class CarRepositoryController : Controller
+    [ApiController]
+    public class CustomerRepositoryController : Controller
     {
-        private readonly ICarRepository _carRepository;
-        public CarRepositoryController(ICarRepository carRepository)
+        private readonly ICustomerRepository _customerRepository;
+
+        public CustomerRepositoryController(ICustomerRepository customerRepository)
         {
-            _carRepository = carRepository;
+            _customerRepository = customerRepository;
         }
         [HttpGet]
         public IActionResult GetAll()
         {
             try
             {
-                return Ok(_carRepository.GetAll());
+                return Ok(_customerRepository.GetAll());
             }
             catch
             {
@@ -30,10 +32,10 @@ namespace DemoMyWebAPI.Controllers
         {
             try
             {
-                var car = _carRepository.GetById(id);
-                if (car != null)
+                var customer = _customerRepository.GetById(id);
+                if (customer != null)
                 {
-                    return Ok(car);
+                    return Ok(customer);
                 }
                 return NotFound();
             }
@@ -43,11 +45,11 @@ namespace DemoMyWebAPI.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Create(CarModel model)
+        public IActionResult Create(CustomerModel model)
         {
             try
             {
-                return Ok(_carRepository.Add(model));
+                return Ok(_customerRepository.Create(model));
             }
             catch
             {
@@ -55,15 +57,15 @@ namespace DemoMyWebAPI.Controllers
             }
         }
         [HttpPut("{id}")]
-        public IActionResult Update(string id, CarVM carVM)
+        public IActionResult edit(string id, CustomerVM cusVM)
         {
-            if (Guid.Parse(id) != carVM.Id)
+            if (Guid.Parse(id) != cusVM.Id)
             {
                 return NotFound();
             }
             try
             {
-                _carRepository.Update(carVM);
+                _customerRepository.Update(cusVM);
                 return NoContent();
             }
             catch
@@ -76,7 +78,7 @@ namespace DemoMyWebAPI.Controllers
         {
             try
             {
-                _carRepository.Delete(id);
+                _customerRepository.Delete(id);
                 return Ok();
             }
             catch

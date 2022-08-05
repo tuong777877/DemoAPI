@@ -49,6 +49,7 @@ namespace DemoMyWebAPI.Repository.Implements
         {
             var car = new Car
             {
+                Id = Guid.NewGuid(),
                 Name = model.Name,
                 Price = model.Price,
                 Descirption = model.Descirption,
@@ -61,6 +62,11 @@ namespace DemoMyWebAPI.Repository.Implements
             {
                 Id = car.Id,
                 Name = car.Name,
+                DateRelease = car.DateRelease,
+                Descirption = car.Descirption,
+                Price = car.Price,
+                Status = car.Status,
+                NameCate = car.catecar.Name,
             };
         }
         public void Update(CarVM carVM)
