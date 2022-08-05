@@ -92,12 +92,13 @@ namespace DemoMyWebAPI.Controllers
             {
                 if (car == null)
                 {
-                    return NotFound();
+                    return NotFound();  
                 }
                 else
                 {
                     _context.Remove(car);
-                    return Ok();
+                    _context.SaveChanges();
+                    return Ok(car);
                 }
             }
             catch
