@@ -1,14 +1,11 @@
-﻿using DemoMyWebAPI.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace DemoMyWebAPI.Data
+﻿namespace DemoMyWebAPI.Data
 {
-    public class CarStoreContext :DbContext
+    public class CarStoreContext : DbContext
     {
         public CarStoreContext(DbContextOptions<CarStoreContext> options) : base(options)
         {
-
         }
+
         public DbSet<RefreshToken> refreshTokens { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<CateCar> CateCars { get; set; }
@@ -16,17 +13,20 @@ namespace DemoMyWebAPI.Data
         public DbSet<CateCustomer> CateCustomers { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Order>(e => {
+            modelBuilder.Entity<Order>(e =>
+            {
                 e.ToTable("Order");
                 e.HasKey(o => o.Id);
             });
 
-            modelBuilder.Entity<OrderDetail>(e => {
+            modelBuilder.Entity<OrderDetail>(e =>
+            {
                 e.ToTable("OrderDetail");
-                e.HasKey(od => new { od.IdCar,od.IdOrder});
-                
+                e.HasKey(od => new { od.IdCar, od.IdOrder });
+
                 e.HasOne(c => c.Car)
                 .WithMany(c => c.orderDetails)
                 .HasForeignKey(c => c.IdCar)

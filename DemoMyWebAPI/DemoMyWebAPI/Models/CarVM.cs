@@ -1,5 +1,4 @@
-﻿using DemoMyWebAPI.Data;
-using DemoMyWebAPI.Enums;
+﻿using DemoMyWebAPI.Enums;
 
 namespace DemoMyWebAPI.Models
 {

@@ -1,7 +1,5 @@
-﻿using DemoMyWebAPI.Data;
-using DemoMyWebAPI.Models;
+﻿using DemoMyWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DemoMyWebAPI.Controllers
 {
@@ -9,88 +7,87 @@ namespace DemoMyWebAPI.Controllers
     [Route("api/[controller]")]
     public class CateCarController : Controller
     {
-        private readonly CarStoreContext _context;
-        public CateCarController(CarStoreContext context)
+        private readonly ICateCarRepository _cateCarRepository;
+
+        public CateCarController(ICateCarRepository cateCarRepository)
         {
-            _context = context;
+            _cateCarRepository = cateCarRepository;
         }
+
+        [Route("GetAll")]
         [HttpGet]
         public IActionResult GetAll()
         {
-            var ListCateCar = _context.CateCars.ToList();
-            return Ok(ListCateCar);
-        }
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
             try
             {
-                var ListCateCar = _context.CateCars.SingleOrDefault(a => a.Id == id);
-                if (ListCateCar == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return Ok(ListCateCar);
-                }
+                return Ok(_cateCarRepository.GetAll());
             }
             catch
             {
                 return BadRequest();
-            }       
+            }
         }
+
+        [Route("GetByIdCategoryCar")]
+        [HttpGet]
+        public IActionResult GetById(int id)
+        {
+            try
+            {
+                var cateCar = _cateCarRepository.GetById(id);
+                if (cateCar != null)
+                {
+                    return Ok(cateCar);
+                }
+                return NotFound();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("CreateCategoryCar")]
         [HttpPost]
         public IActionResult Create(CateCarModel model)
         {
             try
             {
-                var catecar = new CateCar
-                {
-                    Name = model.Name,
-                };
-                _context.Add(catecar);
-                _context.SaveChanges();
-                return Ok(catecar);
+                return Ok(_cateCarRepository.Add(model));
             }
             catch
             {
-
                 return BadRequest();
             }
-            
         }
-        [HttpPut("{id}")]
-        public IActionResult UpdateById(int id, CateCarModel model)
+
+        [Route("EditProfileCategoryCar")]
+        [HttpPut]
+        public IActionResult Update(int id, CateCarVM catecarVM)
         {
-            var catecar = _context.CateCars.SingleOrDefault(a => a.Id == id);
-            if(catecar == null)
+            if (id != catecarVM.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
-            else
+            try
             {
-                catecar.Name = model.Name;
-                _context.SaveChanges();
+                _cateCarRepository.Update(catecarVM);
                 return NoContent();
             }
+            catch
+            {
+                return BadRequest();
+            }
         }
-        [HttpDelete("{id}")]
+
+        [Route("DeleteVategoryCar")]
+        [HttpDelete]
         public IActionResult Delete(int id)
         {
             try
             {
-                var ListCateCar = _context.CateCars.SingleOrDefault(a => a.Id == id);
-                if (ListCateCar == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    _context.Remove(ListCateCar);
-                    _context.SaveChanges();
-                    return Ok(ListCateCar);
-                }
+                _cateCarRepository.Delete(id);
+                return Ok();
             }
             catch
             {

@@ -1,16 +1,16 @@
-﻿using DemoMyWebAPI.Data;
-using DemoMyWebAPI.Models;
-using DemoMyWebAPI.Repository.Constracts;
+﻿using DemoMyWebAPI.Models;
 
 namespace DemoMyWebAPI.Repository.Implements
 {
     public class CateCarRepository : ICateCarRepository
     {
         private readonly CarStoreContext _context;
+
         public CateCarRepository(CarStoreContext context)
         {
             _context = context;
         }
+
         public List<CateCarVM> GetAll()
         {
             var catecar = _context.CateCars.Select(cc => new CateCarVM
@@ -20,6 +20,7 @@ namespace DemoMyWebAPI.Repository.Implements
             });
             return catecar.ToList();
         }
+
         public CateCarVM GetById(int id)
         {
             var catecar = _context.CateCars.SingleOrDefault(cc => cc.Id == id);
@@ -33,6 +34,7 @@ namespace DemoMyWebAPI.Repository.Implements
             }
             return null;
         }
+
         public CateCarVM Add(CateCarModel model)
         {
             var catecar = new CateCar
@@ -47,6 +49,7 @@ namespace DemoMyWebAPI.Repository.Implements
                 Name = catecar.Name,
             };
         }
+
         public void Update(CateCarVM model)
         {
             var catecar = _context.CateCars.SingleOrDefault(cc => cc.Id == model.Id);
@@ -56,6 +59,7 @@ namespace DemoMyWebAPI.Repository.Implements
                 _context.SaveChanges();
             }
         }
+
         public void Delete(int id)
         {
             var catecar = _context.CateCars.SingleOrDefault(cc => cc.Id == id);

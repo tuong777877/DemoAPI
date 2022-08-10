@@ -1,8 +1,5 @@
-﻿using DemoMyWebAPI.Data;
-using DemoMyWebAPI.Model;
-using DemoMyWebAPI.Models;
+﻿using DemoMyWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace DemoMyWebAPI.Controllers
 {
@@ -10,102 +7,92 @@ namespace DemoMyWebAPI.Controllers
     [Route("api/[controller]")]
     public class CarController : Controller
     {
-        private readonly CarStoreContext _context;
-        public CarController(CarStoreContext context)
+        private readonly ICarRepository _carRepository;
+
+        public CarController(ICarRepository carRepository)
         {
-            _context = context;
+            _carRepository = carRepository;
         }
+
+        [Route("GetAll")]
         [HttpGet]
         public IActionResult GetAll()
         {
-            var ListCateCar = _context.Cars
-                .ToList();
-            return Ok(ListCateCar);
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetById(string id)
-        {
             try
             {
-                var ListCar = _context.Cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
-                if (ListCar == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return Ok(ListCar);
-                }
+                return Ok(_carRepository.GetAll());
             }
             catch
             {
                 return BadRequest();
             }
         }
+
+        [Route("GetByIdCustomer")]
+        [HttpGet]
+        public IActionResult GetById(string id)
+        {
+            try
+            {
+                var car = _carRepository.GetById(id);
+                if (car != null)
+                {
+                    return Ok(car);
+                }
+                return NotFound();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("CreateNewCar")]
         [HttpPost]
         public IActionResult Create(CarModel model)
         {
             try
             {
-                var car = new Car
-                {
-                    Id = Guid.NewGuid(),
-                    Name = model.Name,
-                    Price = model.Price,
-                    Descirption=model.Descirption,
-                    IdCate=model.IdCate,
-                };
-                _context.Add(car);
-                _context.SaveChanges();
-                return Ok(car);
+                return Ok(_carRepository.Add(model));
             }
             catch
             {
-
                 return BadRequest();
             }
         }
-        [HttpPut("{id}")]
-        public IActionResult UpdateById(string id, CarModel model)
+
+        [Route("EditProfileCar")]
+        [HttpPut]
+        public IActionResult Update(string id, CarVM carVM)
         {
-            var car = _context.Cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
-            if (car == null)
+            if (Guid.Parse(id) != carVM.Id)
             {
                 return NotFound();
             }
-            else
-            {
-                car.Name = model.Name;
-                car.Price = model.Price;
-                car.Descirption = model.Descirption;
-                car.IdCate = model.IdCate;
-                _context.SaveChanges();
-                return NoContent();
-            }
-        }
-        [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
-        {
-            var car = _context.Cars.SingleOrDefault(a => a.Id == Guid.Parse(id));
             try
             {
-                if (car == null)
-                {
-                    return NotFound();  
-                }
-                else
-                {
-                    _context.Remove(car);
-                    _context.SaveChanges();
-                    return Ok(car);
-                }
+                _carRepository.Update(carVM);
+                return NoContent();
             }
             catch
             {
                 return BadRequest();
             }
+        }
 
+        [Route("DeleteCar")]
+        [HttpDelete]
+        public IActionResult Delete(string id)
+        {
+            try
+            {
+                _carRepository.Delete(id);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }

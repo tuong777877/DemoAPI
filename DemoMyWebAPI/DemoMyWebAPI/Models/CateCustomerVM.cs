@@ -1,6 +1,6 @@
 ﻿namespace DemoMyWebAPI.Models
 {
-    public class CateCarVM
+    public class CateCustomerVM
     {
         public int Id { get; set; }
         public string Name { get; set; }

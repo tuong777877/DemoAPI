@@ -11,6 +11,7 @@ namespace DemoMyWebAPI.Data
         public string PhoneNumber { get; set; }
         public string OrderAddress { get; set; }
         public ICollection<OrderDetail> orderDetails { get; set; }
+
         public Order()
         {
             orderDetails = new List<OrderDetail>();

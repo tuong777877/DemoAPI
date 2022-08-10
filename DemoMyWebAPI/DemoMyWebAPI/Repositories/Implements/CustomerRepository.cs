@@ -3,7 +3,7 @@ using DemoMyWebAPI.Repositories.Constracts;
 
 namespace DemoMyWebAPI.Repositories.Implements
 {
-    public class CustomerRepository :ICustomerRepository
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly CarStoreContext _context;
 
@@ -11,6 +11,7 @@ namespace DemoMyWebAPI.Repositories.Implements
         {
             _context = context;
         }
+
         public List<CustomerVM> GetAll()
         {
             var cus = _context.Customers.Select(c => new CustomerVM
@@ -26,6 +27,7 @@ namespace DemoMyWebAPI.Repositories.Implements
             });
             return cus.ToList();
         }
+
         public CustomerVM GetById(string id)
         {
             var cus = _context.Customers.SingleOrDefault(c => c.Id == Guid.Parse(id));
@@ -45,6 +47,7 @@ namespace DemoMyWebAPI.Repositories.Implements
             }
             return null;
         }
+
         public CustomerVM Create(CustomerModel model)
         {
             var cus = new Customer
