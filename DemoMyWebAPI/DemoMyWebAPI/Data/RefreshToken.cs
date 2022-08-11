@@ -8,9 +8,12 @@ namespace DemoMyWebAPI.Data
     {
         [Key]
         public Guid Id { get; set; }
+
         public Guid CusId { get; set; }
+
         [ForeignKey(nameof(CusId))]
         public Customer customer { get; set; }
+
         public string Token { get; set; }
         public string JwtId { get; set; }
         public bool IsUsed { get; set; }

@@ -1,5 +1,5 @@
 ﻿using DemoMyWebAPI.Models;
-using Microsoft.AspNetCore.Http;
+using DemoMyWebAPI.Repositories.Constracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoMyWebAPI.Controllers
@@ -8,103 +8,87 @@ namespace DemoMyWebAPI.Controllers
     [ApiController]
     public class CustomerController : Controller
     {
-        private readonly CarStoreContext _context;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerController(CarStoreContext context)
+        public CustomerController(ICustomerRepository customerRepository)
         {
-            _context = context;
+            _customerRepository = customerRepository;
         }
+
+        [Route("GetAll")]
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok(_context.Customers.ToList());
-        }
-        [HttpGet("{id}")]
-        public IActionResult GetById(string id)
-        {
-            var cus = _context.Customers.SingleOrDefault(c => c.Id == Guid.Parse(id));
             try
             {
-                if (cus == null)
-                {
-                    return NotFound();
-                }
-                return Ok(cus);
+                return Ok(_customerRepository.GetAll());
             }
             catch
             {
                 return BadRequest();
             }
         }
+
+        [Route("GetByIdCustomer")]
+        [HttpGet]
+        public IActionResult GetById(string id)
+        {
+            try
+            {
+                var customer = _customerRepository.GetById(id);
+                if (customer != null)
+                {
+                    return Ok(customer);
+                }
+                return NotFound();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("CreateAccount")]
         [HttpPost]
         public IActionResult Create(CustomerModel model)
         {
             try
             {
-                var cus = new Customer
-                {
-                    Id = Guid.NewGuid(),
-                    Name = model.Name,
-                    Email = model.Email,
-                    Username = model.Username,
-                    Password = model.Password,
-                    IdCate = model.IdCate,
-                    PhoneNumber = model.PhoneNumber,
-                    Address = model.Address,
-                };
-                _context.Add(cus);
-                _context.SaveChanges();
-                return Ok(cus);
+                return Ok(_customerRepository.Create(model));
             }
             catch
             {
                 return BadRequest();
             }
         }
-        [HttpPut("{id}")]
-        public IActionResult Edit(string id, CustomerModel model)
+
+        [Route("EditProfileAccount")]
+        [HttpPut]
+        public IActionResult edit(string id, CustomerVM cusVM)
         {
-            var cus = _context.Customers.SingleOrDefault(c => c.Id == Guid.Parse(id));
+            if (Guid.Parse(id) != cusVM.Id)
+            {
+                return NotFound();
+            }
             try
             {
-                if (cus == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    cus.Name = model.Name;
-                    cus.Email = model.Email;
-                    cus.Username = model.Username;
-                    cus.Password = model.Password;
-                    cus.IdCate = model.IdCate;
-                    cus.Address = model.Address;
-                    cus.PhoneNumber = model.PhoneNumber;
-                    _context.SaveChanges();
-                    return Ok(cus);
-                }
+                _customerRepository.Update(cusVM);
+                return NoContent();
             }
             catch
             {
                 return BadRequest();
             }
         }
-        [HttpDelete("{id}")]
+
+        [Route("DeleteAccount")]
+        [HttpDelete]
         public IActionResult Delete(string id)
         {
-            var cus = _context.Customers.SingleOrDefault(c => c.Id == Guid.Parse(id));
             try
             {
-                if (cus == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    _context.Remove(cus);
-                    _context.SaveChanges();
-                    return Ok(cus);
-                }
+                _customerRepository.Delete(id);
+                return Ok();
             }
             catch
             {

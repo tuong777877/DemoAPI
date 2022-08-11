@@ -1,17 +1,16 @@
-﻿using DemoMyWebAPI.Data;
-using DemoMyWebAPI.Model;
-using DemoMyWebAPI.Models;
-using DemoMyWebAPI.Repository.Constracts;
+﻿using DemoMyWebAPI.Models;
 
 namespace DemoMyWebAPI.Repository.Implements
 {
     public class CarRepository : ICarRepository
     {
         private readonly CarStoreContext _context;
+
         public CarRepository(CarStoreContext context)
         {
             _context = context;
         }
+
         public List<CarVM> GetAll()
         {
             var car = _context.Cars.Select(c => new CarVM
@@ -45,6 +44,7 @@ namespace DemoMyWebAPI.Repository.Implements
             }
             return null;
         }
+
         public CarVM Add(CarModel model)
         {
             var car = new Car
@@ -54,7 +54,7 @@ namespace DemoMyWebAPI.Repository.Implements
                 Price = model.Price,
                 Descirption = model.Descirption,
                 Status = model.Status,
-                IdCate=model.IdCate,
+                IdCate = model.IdCate,
             };
             _context.Add(car);
             _context.SaveChanges();
@@ -69,13 +69,14 @@ namespace DemoMyWebAPI.Repository.Implements
                 NameCate = car.catecar.Name,
             };
         }
+
         public void Update(CarVM carVM)
         {
             var car = _context.Cars.SingleOrDefault(c => c.Id == carVM.Id);
             if (car != null)
             {
                 carVM.Name = carVM.Name;
-                carVM.Price=carVM.Price;
+                carVM.Price = carVM.Price;
                 carVM.Descirption = carVM.Descirption;
                 carVM.Status = carVM.Status;
                 carVM.DateRelease = carVM.DateRelease;
@@ -83,6 +84,7 @@ namespace DemoMyWebAPI.Repository.Implements
                 _context.SaveChanges();
             }
         }
+
         public void Delete(string id)
         {
             var car = _context.Cars.SingleOrDefault(cc => cc.Id == Guid.Parse(id));
@@ -92,7 +94,5 @@ namespace DemoMyWebAPI.Repository.Implements
                 _context.SaveChanges();
             }
         }
-
-
     }
 }

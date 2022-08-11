@@ -1,5 +1,4 @@
 ﻿using DemoMyWebAPI.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -17,12 +16,14 @@ namespace DemoMyWebAPI.Controllers
         private readonly CarStoreContext _context;
         private readonly AppSettings _appSettings;
 
-        public UserController(CarStoreContext context,IOptionsMonitor<AppSettings> optionsMonitor)
+        public UserController(CarStoreContext context, IOptionsMonitor<AppSettings> optionsMonitor)
         {
             _context = context;
             _appSettings = optionsMonitor.CurrentValue;
         }
-        [HttpPost("Login")]
+
+        [Route("Login")]
+        [HttpPost]
         public IActionResult Validate(LoginModel model)
         {
             var user = _context.Customers.SingleOrDefault(p => p.Username == model.Username && p.Password == model.Password);
@@ -42,6 +43,7 @@ namespace DemoMyWebAPI.Controllers
                 Data = token,
             });
         }
+
         private TokenModel GenerateToke(Customer customer)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -55,12 +57,10 @@ namespace DemoMyWebAPI.Controllers
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim("UserName", customer.Username),
                     new Claim("Id", customer.Id.ToString()),
-
-                    
                 }),
                 //thoi gian het token
                 Expires = DateTime.UtcNow.AddSeconds(20),
-                SigningCredentials=new SigningCredentials(new SymmetricSecurityKey(secretKey),SecurityAlgorithms.HmacSha256Signature),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature),
             };
             var token = jwtTokenHandler.CreateToken(tokenDescription);
             var accessToken = jwtTokenHandler.WriteToken(token);
@@ -89,13 +89,15 @@ namespace DemoMyWebAPI.Controllers
         private string GenerateRefreshToken()
         {
             var random = new byte[32];
-            using(var rng =RandomNumberGenerator.Create())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(random);
                 return Convert.ToBase64String(random);
             }
         }
-        [HttpPost("RenewToken")]
+
+        [Route("RenewToken")]
+        [HttpPost]
         public IActionResult RenewToken(TokenModel model)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -113,16 +115,15 @@ namespace DemoMyWebAPI.Controllers
                 ClockSkew = TimeSpan.Zero,
 
                 //khong cho kiem tra expire token
-                ValidateLifetime=false,
+                ValidateLifetime = false,
             };
             try
             {
                 //Check AccessToken valid format
-                var tokenInVerification = jwtTokenHandler.ValidateToken(model.AccessToken,param, out var validatedToken);
-
+                var tokenInVerification = jwtTokenHandler.ValidateToken(model.AccessToken, param, out var validatedToken);
 
                 //Check thuat toan algorithm
-                if(validatedToken is JwtSecurityToken jwtSecurityToken)
+                if (validatedToken is JwtSecurityToken jwtSecurityToken)
                 {
                     var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256);
                     if (!result)
@@ -139,7 +140,7 @@ namespace DemoMyWebAPI.Controllers
                     });
                 }
 
-                //Check AccessToken Exprie
+                //Check AccessToken Expire
                 var utcExpireDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
 
                 var expireDate = ConvertUnixTimeToDateTime(utcExpireDate);
@@ -207,7 +208,6 @@ namespace DemoMyWebAPI.Controllers
                     Message = "RenewToken success",
                     Data = token,
                 });
-
             }
             catch (Exception ex)
             {
