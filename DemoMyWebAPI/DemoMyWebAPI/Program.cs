@@ -9,7 +9,9 @@ using DemoMyWebAPI.Repositories.Constracts;
 using DemoMyWebAPI.Repositories.Implements;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection.PortableExecutable;
 using System.Text;
+using System.Web.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 

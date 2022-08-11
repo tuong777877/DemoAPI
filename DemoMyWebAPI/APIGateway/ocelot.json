@@ -1,0 +1,16 @@
+{
+  "ReRoutes": [
+    {
+      "DownstreamPathTemplate": "/swagger/index.html",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "7269"
+        }
+      ],
+      "UpstreamPathTemplate": "/CateCar",
+      "UpstreamHttpMethod": [ "GET" ]
+    }
+  ]
+}
