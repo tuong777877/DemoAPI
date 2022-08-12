@@ -61,18 +61,18 @@ namespace DemoMyWebAPI.Controllers
             }
         }
 
-        [Route("EditProfileCategoryCar")]
+        [Route("EditProfileCategoryCar/"+"{id}")]
         [HttpPut]
-        public IActionResult Update(int id, CateCarVM catecarVM)
+        public IActionResult Update(int id, CateCarModel catecarVM)
         {
-            if (id != catecarVM.Id)
-            {
-                return BadRequest();
-            }
+            //if (id != catecarVM)
+            //{
+            //    return BadRequest();
+            //}
             try
             {
-                _cateCarRepository.Update(catecarVM);
-                return NoContent();
+                _cateCarRepository.Update(catecarVM,id);
+                return Ok();
             }
             catch
             {
@@ -80,7 +80,7 @@ namespace DemoMyWebAPI.Controllers
             }
         }
 
-        [Route("DeleteVategoryCar")]
+        [Route("DeleteVategoryCar/" + "{id}")]
         [HttpDelete]
         public IActionResult Delete(int id)
         {

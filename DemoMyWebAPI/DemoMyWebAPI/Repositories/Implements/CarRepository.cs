@@ -75,12 +75,12 @@ namespace DemoMyWebAPI.Repository.Implements
             var car = _context.Cars.SingleOrDefault(c => c.Id == carVM.Id);
             if (car != null)
             {
-                carVM.Name = carVM.Name;
-                carVM.Price = carVM.Price;
-                carVM.Descirption = carVM.Descirption;
-                carVM.Status = carVM.Status;
-                carVM.DateRelease = carVM.DateRelease;
-                carVM.NameCate = carVM.NameCate;
+                car.Name = carVM.Name;
+                car.Price = carVM.Price;
+                car.Descirption = carVM.Descirption;
+                car.Status = carVM.Status;
+                car.DateRelease = carVM.DateRelease;
+                car.catecar.Name = carVM.NameCate;
                 _context.SaveChanges();
             }
         }
