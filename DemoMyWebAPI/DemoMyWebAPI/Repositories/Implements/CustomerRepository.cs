@@ -81,13 +81,13 @@ namespace DemoMyWebAPI.Repositories.Implements
             var cus = _context.Customers.SingleOrDefault(c => c.Id == cusVM.Id);
             if (cus != null)
             {
-                cusVM.Name = cusVM.Name;
-                cusVM.Email = cusVM.Email;
-                cusVM.Username = cusVM.Username;
-                cusVM.Password = cusVM.Password;
-                cusVM.NameCate = cusVM.NameCate;
-                cusVM.Address = cusVM.Address;
-                cusVM.PhoneNumber = cusVM.PhoneNumber;
+                cus.Name = cusVM.Name;
+                cus.Email = cusVM.Email;
+                cus.Username = cusVM.Username;
+                cus.Password = cusVM.Password;
+                cus.catecus.Name = cusVM.NameCate;
+                cus.Address = cusVM.Address;
+                cus.PhoneNumber = cusVM.PhoneNumber;
                 _context.SaveChanges();
             }
         }

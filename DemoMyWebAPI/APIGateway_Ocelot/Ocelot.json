@@ -1,0 +1,24 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/api/CateCus",
+      "UpstreamHttpMethod": [ "GET", "PUT", "POST" ],
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7269
+        }
+      ],
+      "DownstreamPathTemplate": "/api/CateCus"
+    },
+    {
+      "UpstreamPathTemplate": "/api/CateCus/{id}",
+      "UpstreamHttpMethod": ["Get","Delete"]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:7269"
+  }
+}

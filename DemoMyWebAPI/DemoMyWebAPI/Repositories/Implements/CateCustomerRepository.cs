@@ -59,7 +59,7 @@ namespace DemoMyWebAPI.Repositories.Implements
             var catecus = _context.CateCustomers.SingleOrDefault(c => c.Id == model.Id);
             if (catecus != null)
             {
-                model.Name = model.Name;
+                catecus.Name = model.Name;
                 _context.SaveChanges();
             }
         }
