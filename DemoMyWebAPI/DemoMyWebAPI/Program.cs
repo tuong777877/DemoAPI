@@ -9,57 +9,87 @@ using DemoMyWebAPI.Repositories.Constracts;
 using DemoMyWebAPI.Repositories.Implements;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
+using NLog.Web;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Web.Http;
 
-var builder = WebApplication.CreateBuilder(args);
+var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+logger.Debug("init main");
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<CarStoreContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
-builder.Services.AddScoped<ICateCarRepository, CateCarRepository>();
-builder.Services.AddScoped<ICarRepository, CarRepository>();
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddScoped<ICateCustomerRepository, CateCustomerRepository>();
-// SecretKey and JWT Bear
-builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-var secretkey = builder.Configuration["AppSettings:SecretKey"];
-var secretkeyBytes = Encoding.UTF8.GetBytes(secretkey);
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+try
 {
-    options.TokenValidationParameters = new TokenValidationParameters
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Add services to the container.
+
+    builder.Services.AddControllers();
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddDbContext<CarStoreContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("MyDatabase")));
+    builder.Services.AddScoped<ICateCarRepository, CateCarRepository>();
+    builder.Services.AddScoped<ICarRepository, CarRepository>();
+    builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+    builder.Services.AddScoped<ICateCustomerRepository, CateCustomerRepository>();
+
+    // Add services to the container.
+    builder.Services.AddControllersWithViews();
+
+    // NLog: Setup NLog for Dependency injection
+    builder.Logging.ClearProviders();
+    builder.Host.UseNLog();
+
+    builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+    var secretkey = builder.Configuration["AppSettings:SecretKey"];
+    var secretkeyBytes = Encoding.UTF8.GetBytes(secretkey);
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
     {
-        // tu cap token
-        ValidateIssuer = false,
-        ValidateAudience = false,
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            // tu cap token
+            ValidateIssuer = false,
+            ValidateAudience = false,
 
-        //ky vao token
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(secretkeyBytes),
+            //ky vao token
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(secretkeyBytes),
 
-        ClockSkew = TimeSpan.Zero
-    };
-});
-var app = builder.Build();
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+    var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthentication();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.MapControllerRoute(
+       name: "default",
+       pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception exception)
+{
+    // NLog: catch setup errors
+    logger.Error(exception, "Stopped program because of exception");
+    throw;
+}
+finally
+{
+    // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+    NLog.LogManager.Shutdown();
+}

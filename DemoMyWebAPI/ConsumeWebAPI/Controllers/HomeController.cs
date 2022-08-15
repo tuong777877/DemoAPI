@@ -17,10 +17,12 @@ namespace ConsumeWebAPI.Controllers
             client = new HttpClient();
             client.BaseAddress = baseAddress;
             _logger = logger;
+            _logger.LogDebug(1, "NLog injected into HomeController");
         }
 
         public IActionResult Index()
         {
+            _logger.LogInformation("Hello, this is the index!");
             List<CateCarViewModel> modelList = new List<CateCarViewModel>();
             HttpResponseMessage response = client.GetAsync(client.BaseAddress + "CateCar/GetAll").Result;
             if (response.IsSuccessStatusCode)
@@ -32,6 +34,7 @@ namespace ConsumeWebAPI.Controllers
         }
         public IActionResult Create()
         {
+            _logger.LogInformation("Hello, this is the Create Page!");
             return View();
         }
         [HttpPost]
@@ -48,6 +51,7 @@ namespace ConsumeWebAPI.Controllers
         }
         public IActionResult Edit(CateCarViewModel model)
         {
+            _logger.LogInformation("Hello, this is the Edit Page!");
             string data = JsonConvert.SerializeObject(model);
             StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
             HttpResponseMessage response = client.PutAsync(client.BaseAddress + "CateCar/EditProfileCategoryCar/" + model.Id, content).Result;
@@ -86,6 +90,7 @@ namespace ConsumeWebAPI.Controllers
 
         public IActionResult Delete(CateCarViewModel model)
         {
+            _logger.LogInformation("Hello, this is the Delete Page!");
             string data = JsonConvert.SerializeObject(model);
             HttpResponseMessage response = client.DeleteAsync(client.BaseAddress + "CateCar/DeleteVategoryCar/" + model.Id).Result;
             if (response.IsSuccessStatusCode)
