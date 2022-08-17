@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ConsumeWebAPI.Models
+﻿namespace ConsumeWebAPI.Models
 {
     public class LoginViewModel
     {

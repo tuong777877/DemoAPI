@@ -3,15 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Text;
-using System.Net.Http;
 
 namespace ConsumeWebAPI.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        Uri baseAddress = new Uri("https://localhost:7269/api/");
-        HttpClient client;
+        private Uri baseAddress = new Uri("https://localhost:7269/api/");
+        private HttpClient client;
+
         public HomeController(ILogger<HomeController> logger)
         {
             client = new HttpClient();
@@ -27,28 +27,31 @@ namespace ConsumeWebAPI.Controllers
             HttpResponseMessage response = client.GetAsync(client.BaseAddress + "CateCar/GetAll").Result;
             if (response.IsSuccessStatusCode)
             {
-                string data= response.Content.ReadAsStringAsync().Result;
+                string data = response.Content.ReadAsStringAsync().Result;
                 modelList = JsonConvert.DeserializeObject<List<CateCarViewModel>>(data);
             }
             return View(modelList);
         }
+
         public IActionResult Create()
         {
             _logger.LogInformation("Hello, this is the Create Page!");
             return View();
         }
+
         [HttpPost]
         public IActionResult Create(CateCarViewModel model)
-        {   
+        {
             string data = JsonConvert.SerializeObject(model);
-            StringContent content = new StringContent(data, Encoding.UTF8,"application/json");
-            HttpResponseMessage response = client.PostAsync(client.BaseAddress + "CateCar/CreateCategoryCar",content).Result;
+            StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = client.PostAsync(client.BaseAddress + "CateCar/CreateCategoryCar", content).Result;
             if (response.IsSuccessStatusCode)
             {
                 return RedirectToAction("Index");
             }
             return View();
         }
+
         public IActionResult Edit(CateCarViewModel model)
         {
             _logger.LogInformation("Hello, this is the Edit Page!");
@@ -63,6 +66,7 @@ namespace ConsumeWebAPI.Controllers
             }
             return View(model);
         }
+
         //public IActionResult Edit(int id)
         //{
         //    CateCarViewModel model = new CateCarViewModel();
@@ -99,6 +103,7 @@ namespace ConsumeWebAPI.Controllers
             }
             return View(model);
         }
+
         public IActionResult Privacy()
         {
             return View();
