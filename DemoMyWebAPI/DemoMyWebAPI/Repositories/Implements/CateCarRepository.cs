@@ -50,7 +50,7 @@ namespace DemoMyWebAPI.Repository.Implements
             };
         }
 
-        public void Update(CateCarModel model,int id)
+        public void Update(CateCarModel model, int id)
         {
             var catecar = _context.CateCars.SingleOrDefault(cc => cc.Id == id);
             if (catecar != null)

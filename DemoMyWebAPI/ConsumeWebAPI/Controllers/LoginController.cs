@@ -10,6 +10,7 @@ namespace ConsumeWebAPI.Controllers
             LoginViewModel obj = new LoginViewModel();
             return View(obj);
         }
+
         [HttpPost]
         public ActionResult Index(LoginViewModel objuserlogin)
         {
@@ -17,7 +18,6 @@ namespace ConsumeWebAPI.Controllers
             if (display != null)
             {
                 ViewBag.Status = "CORRECT UserName and Password";
-                
             }
             else
             {
@@ -25,6 +25,7 @@ namespace ConsumeWebAPI.Controllers
             }
             return View(objuserlogin);
         }
+
         public List<LoginViewModel> Userloginvalues()
         {
             List<LoginViewModel> objModel = new List<LoginViewModel>();

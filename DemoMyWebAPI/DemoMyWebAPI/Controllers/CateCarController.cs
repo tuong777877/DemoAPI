@@ -61,7 +61,7 @@ namespace DemoMyWebAPI.Controllers
             }
         }
 
-        [Route("EditProfileCategoryCar/"+"{id}")]
+        [Route("EditProfileCategoryCar/" + "{id}")]
         [HttpPut]
         public IActionResult Update(int id, CateCarModel catecarVM)
         {
@@ -71,7 +71,7 @@ namespace DemoMyWebAPI.Controllers
             //}
             try
             {
-                _cateCarRepository.Update(catecarVM,id);
+                _cateCarRepository.Update(catecarVM, id);
                 return Ok();
             }
             catch

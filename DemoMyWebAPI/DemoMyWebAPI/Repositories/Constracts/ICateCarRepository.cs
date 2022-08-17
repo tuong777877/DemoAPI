@@ -10,7 +10,7 @@ namespace DemoMyWebAPI.Repository.Constracts
 
         CateCarVM Add(CateCarModel model);
 
-        void Update(CateCarModel cateacarVM,int id);
+        void Update(CateCarModel cateacarVM, int id);
 
         void Delete(int id);
     }

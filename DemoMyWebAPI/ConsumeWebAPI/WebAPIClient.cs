@@ -1,8 +1,5 @@
-﻿using System.Net.Http;
+﻿using ConsumeWebAPI.Models;
 using System.Text.Json;
-using System.Threading.Tasks;
-using ConsumeWebAPI.Models;
-using Microsoft.Extensions.Logging;
 
 namespace ConsumeWebAPI
 {
@@ -41,7 +38,6 @@ namespace ConsumeWebAPI
                 throw;
             }
             return new CateCarViewModel[] { };
-
         }
     }
 }
